@@ -1,0 +1,36 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: operator-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  - pods
+  verbs:
+  - get
+  - list
+  - create
+  - update
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - '*'
+- apiGroups:
+  - intre.com
+  resources:
+  - sites
+  verbs:
+  - '*'
+- apiGroups:
+  - intre.com
+  resources:
+  - sites/status
+  verbs:
+  - get
+  - update
+  - patch

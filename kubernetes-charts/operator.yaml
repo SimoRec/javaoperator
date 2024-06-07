@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: javaoperator
+  namespace: operator-java
+spec:
+  containers:
+    - name: javaoperator
+      image: javaoperator:latest
+      imagePullPolicy: Never
