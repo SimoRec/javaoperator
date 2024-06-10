@@ -1,11 +1,11 @@
 package intre.it.javaoperator.controller;
 
 import intre.it.javaoperator.model.WebSite;
-import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import io.javaoperatorsdk.operator.api.reconciler.*;
-import io.javaoperatorsdk.operator.api.reconciler.Context;
 
 @ControllerConfiguration
 public class WebSiteReconciler implements Reconciler<WebSite>, Cleaner<WebSite> {
@@ -17,28 +17,41 @@ public class WebSiteReconciler implements Reconciler<WebSite>, Cleaner<WebSite> 
 
     @Override
     public UpdateControl<WebSite> reconcile(WebSite WebSite, Context<WebSite> context) throws Exception {
-        Pod pod = new PodBuilder()
-                .withKind("Pod")
-                .withApiVersion("v1")
-                .withMetadata(
-                        new ObjectMetaBuilder()
-                        .withName(WebSite.getSpec().getWebSiteName()) // Leggo le informazioni della Custom Resource Creata
-                        .build())
-                .withSpec(new PodSpecBuilder()
-                        .withContainers(new ContainerBuilder()
-                                .withName(WebSite.getSpec().getWebSiteName()) // OPZIONALE: Leggo le informazioni della Custom Resource Creata
+        Deployment deployment = new DeploymentBuilder()
+                    .withNewMetadata()
+                        .withName(WebSite.getSpec().getWebSiteName()+"-deployment")
+                        .addToLabels("app", WebSite.getSpec().getWebSiteName())
+                    .endMetadata()
+                    .withNewSpec()
+                        .withReplicas(WebSite.getSpec().getReplicas())
+                        .withNewSelector()
+                            .addToMatchLabels("app", WebSite.getSpec().getWebSiteName())
+                        .endSelector()
+                    .withNewTemplate()
+                        .withNewMetadata()
+                            .addToLabels("app", WebSite.getSpec().getWebSiteName())
+                        .endMetadata()
+                        .withNewSpec()
+                            .addNewContainer()
+                                .withName("nginx")
                                 .withImage("nginx:1.14.2")
-                                .build())
-                        .build())
+                                .addNewPort()
+                                    .withContainerPort(80)
+                                .endPort()
+                            .endContainer()
+                        .endSpec()
+                    .endTemplate()
+                    .endSpec()
                 .build();
 
-        client.pods().resource(pod).create();
+
+        client.apps().deployments().resource(deployment).create();
         return UpdateControl.patchStatus(WebSite);
     }
 
     @Override
     public DeleteControl cleanup(WebSite webSite, Context<WebSite> context) {
-        client.pods().withName(webSite.getSpec().getWebSiteName()).delete(); // cancello il pod
+        client.apps().deployments().withName(webSite.getSpec().getWebSiteName()+"-deployment").delete(); // cancello il deployment
         return DeleteControl.defaultDelete();
     }
 }

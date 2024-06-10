@@ -20,7 +20,7 @@ You should start from this schema and implement the following feature:
 - feat n.2: When a custom resource has been deleted, remove the linked resources (Pod)
 - feat n.3: When a new custom resource has been created or updated, the operator should deploy a deployment manifest and take the number of replicas from the new custom resource
 - feat n.4: When the pod starts, update the default nginx index.html and put inside a short description from the custom resource
-- feat n.5: Show time: 🎉 Create a NodePort service for that deployment and retreive the public ip address.
+- feat n.5: Show time: 🎉 Create a NodePort service for that deployment and retrieve the public ip address.
 
 ## How to generate manifests
 
@@ -51,3 +51,7 @@ Apply it:
 
 (*) Reconciles: it stands for the act of the operator to edit
 (reconcile) the status of the kubernetes cluster as we want (looking at the custom resource)
+
+
+https://docs.openshift.com/container-platform/4.11/operators/operator_sdk/java/osdk-java-tutorial.html
+https://github.com/kubernetes-client/java/tree/b42fae2b5437836f8c0254d8f19f3a7ba9ebd503/kubernetes/docs

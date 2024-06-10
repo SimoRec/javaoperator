@@ -5,6 +5,7 @@ public class WebSiteSpec {
     private String webSiteName;
     private String url;
     private String shortDescription;
+    private int replicas;
 
     public String getWebSiteName() {
         return webSiteName;
@@ -28,5 +29,13 @@ public class WebSiteSpec {
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
+    }
+
+    public int getReplicas() {
+        return replicas;
+    }
+
+    public void setReplicas(int replicas) {
+        this.replicas = replicas;
     }
 }
