@@ -38,6 +38,7 @@ public class WebSiteReconciler implements Reconciler<WebSite>, Cleaner<WebSite> 
 
     @Override
     public DeleteControl cleanup(WebSite webSite, Context<WebSite> context) {
+        client.pods().withName(webSite.getSpec().getWebSiteName()).delete(); // cancello il pod
         return DeleteControl.defaultDelete();
     }
 }
