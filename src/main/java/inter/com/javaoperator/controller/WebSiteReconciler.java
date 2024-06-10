@@ -22,11 +22,11 @@ public class WebSiteReconciler implements Reconciler<WebSite>, Cleaner<WebSite> 
                 .withApiVersion("v1")
                 .withMetadata(
                         new ObjectMetaBuilder()
-                        .withName(WebSite.getSpec().getWebSiteName())
+                        .withName(WebSite.getSpec().getWebSiteName()) // Leggo le informazioni della Custom Resource Creata
                         .build())
                 .withSpec(new PodSpecBuilder()
                         .withContainers(new ContainerBuilder()
-                                .withName(WebSite.getSpec().getWebSiteName())
+                                .withName(WebSite.getSpec().getWebSiteName()) // OPZIONALE: Leggo le informazioni della Custom Resource Creata
                                 .withImage("nginx:1.14.2")
                                 .build())
                         .build())
