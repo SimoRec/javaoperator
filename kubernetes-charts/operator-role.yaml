@@ -21,15 +21,15 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - intre.com
+  - intre.it
   resources:
-  - sites
+  - websites
   verbs:
   - '*'
 - apiGroups:
-  - intre.com
+  - intre.it
   resources:
-  - sites/status
+  - websites/status
   verbs:
   - get
   - update

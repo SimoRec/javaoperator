@@ -1,4 +1,4 @@
-package inter.com.javaoperator.model;
+package intre.it.javaoperator.model;
 
 import io.javaoperatorsdk.operator.api.ObservedGenerationAwareStatus;
 

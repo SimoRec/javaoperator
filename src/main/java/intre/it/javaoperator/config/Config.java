@@ -1,6 +1,6 @@
-package inter.com.javaoperator.config;
+package intre.it.javaoperator.config;
 
-import inter.com.javaoperator.controller.WebSiteReconciler;
+import intre.it.javaoperator.controller.WebSiteReconciler;
 import io.javaoperatorsdk.operator.Operator;
 import io.javaoperatorsdk.operator.api.reconciler.Reconciler;
 import org.springframework.context.annotation.Bean;

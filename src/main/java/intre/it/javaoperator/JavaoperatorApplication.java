@@ -1,4 +1,4 @@
-package inter.com.javaoperator;
+package intre.it.javaoperator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
