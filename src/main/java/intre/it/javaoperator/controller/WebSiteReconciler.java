@@ -34,7 +34,7 @@ public class WebSiteReconciler implements Reconciler<WebSite>, Cleaner<WebSite> 
                         .withNewSpec()
                             .addNewContainer()
                                 .withName("nginx")
-                                .withImage("nginx:1.14.2")
+                                .withImage("nginx")
                                 .addNewPort()
                                     .withContainerPort(80)
                                 .endPort()
