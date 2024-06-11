@@ -22,6 +22,18 @@ public class WebSiteReconciler implements Reconciler<WebSite>, Cleaner<WebSite> 
 
     @Override
     public UpdateControl<WebSite> reconcile(WebSite WebSite, Context<WebSite> context) throws Exception {
+        Map<String, String> html = new HashMap<>();
+        html.put("index.html", "<html><body>" + WebSite.getSpec().getShortDescription() + "</body></html>");
+
+        ConfigMap configMap = new ConfigMapBuilder()
+                .withNewMetadata()
+                .withName(WebSite.getSpec().getWebSiteName()+"-cm")
+                .addToLabels("app", WebSite.getSpec().getWebSiteName())
+                .endMetadata()
+                .withData(html)
+                .build();
+        client.configMaps().resource(configMap).create();
+
         Deployment deployment = new DeploymentBuilder()
                     .withNewMetadata()
                         .withName(WebSite.getSpec().getWebSiteName()+"-deployment")
@@ -43,7 +55,22 @@ public class WebSiteReconciler implements Reconciler<WebSite>, Cleaner<WebSite> 
                                 .addNewPort()
                                     .withContainerPort(80)
                                 .endPort()
+                                .addNewVolumeMount()
+                                    .withName("nginx-conf")
+                                    .withSubPath("index.html")
+                                    .withMountPath("/usr/share/nginx/html/index.html")
+                                .endVolumeMount()
                             .endContainer()
+                            .addNewVolume()
+                                .withName("nginx-conf")
+                                .withNewConfigMap()
+                                .withName(WebSite.getSpec().getWebSiteName()+"-cm")
+                                    .addNewItem()
+                                        .withKey("index.html")
+                                        .withPath("index.html")
+                                    .endItem()
+                                .endConfigMap()
+                            .endVolume()
                         .endSpec()
                     .endTemplate()
                     .endSpec()
@@ -79,6 +106,7 @@ public class WebSiteReconciler implements Reconciler<WebSite>, Cleaner<WebSite> 
     public DeleteControl cleanup(WebSite webSite, Context<WebSite> context) {
         client.apps().deployments().withName(webSite.getSpec().getWebSiteName()+"-deployment").delete(); // cancello il deployment
         client.services().withName(webSite.getSpec().getWebSiteName()+"-service").delete(); //Cancello il service
+        client.configMaps().withName(webSite.getSpec().getWebSiteName()+"-cm").delete(); //Cancello la config map
         return DeleteControl.defaultDelete();
     }
 }

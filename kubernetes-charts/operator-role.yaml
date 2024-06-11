@@ -8,6 +8,7 @@ rules:
   resources:
   - events
   - pods
+  - configmaps
   - services
   verbs:
   - get
